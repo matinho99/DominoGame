@@ -13,12 +13,13 @@ public class DGame
 		DView dView = new DView();
 		DClient dClient = new DClient();
 		DController dController = new DController();
-			
-		dEngine.addObserver(dClient);
+		//dEngine.addObserver(dClient);
+		dEngine.addObserver(dView);
 		dClient.addObserver(dView);
 		dController.addModel(dEngine);
 		dController.addView(dView);
 		dView.addController(dController);
+		dView.addModel(dEngine);
 	}
 	
 	public void run()
