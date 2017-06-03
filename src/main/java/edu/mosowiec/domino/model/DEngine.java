@@ -9,7 +9,8 @@ public class DEngine extends java.util.Observable {
 	public ArrayList<DBone> remainingBones;
 	public ArrayList<DBone> bonesInHand;
 	public ArrayList<DBone> bonesOnTable;
-	boolean isGameInitialized;
+	public boolean isGameInitialized=false, choiceNeeded=false, isGameFinished=false;
+	public DBone firstPutOnTable;
 	
 	public class DBone {
 		public Point p;
@@ -41,6 +42,7 @@ public class DEngine extends java.util.Observable {
 		}
 		bonesInHand = new ArrayList<DBone>();
 		bonesOnTable = new ArrayList<DBone>();
+		firstPutOnTable=null;
 	}
 
 	public void initGame()
@@ -65,14 +67,17 @@ public class DEngine extends java.util.Observable {
 	{
 		Random gen = new Random();
 		DBone bone = null;
-		bone = allBones.get(gen.nextInt(allBones.size()));
+		if(allBones.size()>0)
+		{
+			bone = allBones.get(gen.nextInt(allBones.size()));
+		}
 		bonesInHand.add(bone);
 		allBones.remove(bone);
 		setChanged();
 		notifyObservers();
 	}
 	
-	public void putBoneOnTable(Point p)
+	public void putBoneOnTable(Point p, int choice)
 	{
 		DBone tmp = null;
 		DBone first = null;
@@ -96,35 +101,52 @@ public class DEngine extends java.util.Observable {
 		
 		if(bonesOnTable.size()==0)
 		{
-			System.out.println("Adding to empty table");
 			bonesOnTable.add(tmp);
-			bonesInHand.remove(tmp);			
+			bonesInHand.remove(tmp);
+			firstPutOnTable=tmp;
 		}
-		else if ( ( tmp.p.y==first.p.x && first.isRotated==false ) || ( tmp.p.y==first.p.y && first.isRotated==true ) )
+		else if ( choice==0 && ( ( tmp.p.y==first.p.x && first.isRotated==false ) || ( tmp.p.y==first.p.y && first.isRotated==true ) 
+				|| ( tmp.p.x==first.p.x && first.isRotated==false ) || ( tmp.p.x==first.p.y && first.isRotated==true ) )
+				&& ( ( tmp.p.x==last.p.y && last.isRotated==false ) || ( tmp.p.x==last.p.x && last.isRotated==true ) 
+				|| ( tmp.p.y==last.p.y && last.isRotated==false ) || ( tmp.p.y==last.p.x && last.isRotated==true ) ) )
 		{
-			System.out.println("Adding as first without rotating");
+			choiceNeeded=true;
+		}
+		else if ( ( choice==0 || choice==1 ) 
+				&& ( ( tmp.p.y==first.p.x && first.isRotated==false ) || ( tmp.p.y==first.p.y && first.isRotated==true ) ) )
+		{
 			bonesOnTable.add(0, tmp);
 			bonesInHand.remove(tmp);
 		}
-		else if ( ( tmp.p.x==first.p.x && first.isRotated==false ) || ( tmp.p.x==first.p.y && first.isRotated==true ) )
+		else if ( ( choice==0 || choice==1 )
+				&& ( ( tmp.p.x==first.p.x && first.isRotated==false ) || ( tmp.p.x==first.p.y && first.isRotated==true ) ) )
 		{
-			System.out.println("Adding as first and rotating");
 			bonesOnTable.add(0, tmp);
 			tmp.isRotated=true;
 			bonesInHand.remove(tmp);
 		}
-		else if ( ( tmp.p.x==last.p.y && last.isRotated==false ) || ( tmp.p.x==last.p.x && last.isRotated==true ) )
+		else if ( ( choice==0 || choice==2 ) 
+				&& ( ( tmp.p.x==last.p.y && last.isRotated==false ) || ( tmp.p.x==last.p.x && last.isRotated==true ) ) )
 		{
-			System.out.println("Adding as last without rotating");
 			bonesOnTable.add(bonesOnTable.size(), tmp);
 			bonesInHand.remove(tmp);
 		}
-		else if ( ( tmp.p.y==last.p.y && last.isRotated==false ) || ( tmp.p.y==last.p.x && last.isRotated==true ) )
+		else if ( ( choice==0 || choice==2 ) 
+				&& ( ( tmp.p.y==last.p.y && last.isRotated==false ) || ( tmp.p.y==last.p.x && last.isRotated==true ) ) )
 		{
-			System.out.println("Adding as last and rotating");
 			bonesOnTable.add(bonesOnTable.size(), tmp);
 			tmp.isRotated=true;
 			bonesInHand.remove(tmp);
+		}
+		
+		if(choice!=0 && choiceNeeded)
+		{
+			choiceNeeded=false;
+		}
+		
+		if(bonesInHand.size()==0)
+		{
+			isGameFinished=true;
 		}
 		
 		setChanged();

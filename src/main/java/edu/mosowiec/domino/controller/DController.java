@@ -26,14 +26,39 @@ public class DController implements ActionListener {
 			System.out.println("You pressed getABone.");
 			engine.getABone();
 		}
-		else
+		else if ( engine.choiceNeeded 
+				&& ( e.getSource() == view.bonesOnTable.get(0) || e.getSource() == view.bonesOnTable.get(view.bonesOnTable.size()-1) ) )
+		{
+			System.out.println("You made a choice.");
+			
+			if(e.getSource() == view.bonesOnTable.get(0))
+			{
+				System.out.println(".. to beginning");
+				engine.putBoneOnTable(view.needingChoice.p, 1);
+			}
+			else if(e.getSource() == view.bonesOnTable.get(view.bonesOnTable.size()-1))
+			{
+				System.out.println(".. to end");
+				engine.putBoneOnTable(view.needingChoice.p, 2);
+			}
+			
+			engine.choiceNeeded=false;
+			view.needingChoice=null;
+		}
+		else if(!engine.choiceNeeded)
 		{
 			for(int i=0; i<view.bonesInHand.size(); i++)
 			{
 				if(e.getSource()==view.bonesInHand.get(i))
 				{
 					System.out.println("You pressed Bone " + view.bonesInHand.get(i).p);
-					engine.putBoneOnTable(view.bonesInHand.get(i).p);
+					engine.putBoneOnTable(view.bonesInHand.get(i).p, 0);
+					
+					if(engine.choiceNeeded)
+					{
+						view.needingChoice=view.bonesInHand.get(i);
+					}
+					
 					break;
 				}
 			}
