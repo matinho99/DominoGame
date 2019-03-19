@@ -3,6 +3,7 @@ package edu.mosowiec.domino.view;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Observable;
 import java.awt.*;
@@ -124,8 +125,8 @@ public class DView implements java.util.Observer
 		for(int i=0; i<allBones.size(); i++) 
 		{
 			tmp = allBones.get(i);
-			tmp.setIcon(new ImageIcon("C:/Users/matinho1706/workspace/DominoGame"
-					+ "/src/main/java/edu/mosowiec/domino/view/DBones/"+tmp.p.x+tmp.p.y+".png"));
+			URL url = getClass().getResource("DBones/"+tmp.p.x + tmp.p.y+".png");
+			tmp.setIcon(new ImageIcon(url));
 			tmp.setPreferredSize(new Dimension(100, 50));
 		}
 	}
@@ -303,31 +304,31 @@ public class DView implements java.util.Observer
 		{
 			if(rotType==1)
 			{
+				URL url = getClass().getResource("DBones/Left/"+tmp.p.x+tmp.p.y+"_L.png");
 				tmp.setIcon(null);
-				tmp.setIcon(new ImageIcon("C:/Users/matinho1706/workspace/DominoGame"
-						+ "/src/main/java/edu/mosowiec/domino/view/DBones/Left/"+tmp.p.x+tmp.p.y+"_L.png"));
+				tmp.setIcon(new ImageIcon(url));
 				tmp.setSize(50, 100);
 			}
 			else if(rotType==2)
 			{
+				URL url = getClass().getResource("DBones/Down/"+tmp.p.x+tmp.p.y+"_Down.png");
 				tmp.setIcon(null);
-				tmp.setIcon(new ImageIcon("C:/Users/matinho1706/workspace/DominoGame"
-						+ "/src/main/java/edu/mosowiec/domino/view/DBones/Down/"+tmp.p.x+tmp.p.y+"_Down.png"));
+				tmp.setIcon(new ImageIcon(url));
 				tmp.setSize(100, 50);
 			}
 			else if(rotType==3)
 			{
+				URL url = getClass().getResource("DBones/Right/"+tmp.p.x+tmp.p.y+"_R.png");
 				tmp.setIcon(null);
-				tmp.setIcon(new ImageIcon("C:/Users/matinho1706/workspace/DominoGame"
-						+ "/src/main/java/edu/mosowiec/domino/view/DBones/Right/"+tmp.p.x+tmp.p.y+"_R.png"));
+				tmp.setIcon(new ImageIcon(url));
 				tmp.setSize(50, 100);
 			}
 		}
 		else if(tmp.p.x==tmp.p.y && ( rotType==1 || rotType==3 ) )
 		{
+			URL url = getClass().getResource("DBones/"+tmp.p.x+tmp.p.y+"R.png");
 			tmp.setIcon(null);
-			tmp.setIcon(new ImageIcon("C:/Users/matinho1706/workspace/DominoGame"
-					+ "/src/main/java/edu/mosowiec/domino/view/DBones/"+tmp.p.x+tmp.p.y+"R.png"));
+			tmp.setIcon(new ImageIcon(url));
 			tmp.setSize(50, 100);			
 		}
 	}
